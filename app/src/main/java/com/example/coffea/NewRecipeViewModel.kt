@@ -3,15 +3,25 @@ package com.example.coffea
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.coffea.data.NewRecipeUiState
 import com.example.coffea.data.Recipe
+import com.example.coffea.data.RecipeListUiState
 import com.example.coffea.data.RecipeRepository
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import org.w3c.dom.Text
+import java.util.UUID
+import kotlin.String
 import kotlin.text.toIntOrNull
 
 class NewRecipeViewModel(private val recipeRepository: RecipeRepository): ViewModel() {
@@ -31,9 +41,9 @@ class NewRecipeViewModel(private val recipeRepository: RecipeRepository): ViewMo
                 currentState -> currentState.copy(
             name = "",
             method = "",
-            coffee = "0.0",
-            grind = "0",
-            water = "0.0",
+            coffee = "",
+            grind = "",
+            water = "",
             comment = ""
         )
         }
@@ -51,7 +61,7 @@ class NewRecipeViewModel(private val recipeRepository: RecipeRepository): ViewMo
             name = _uiState.value.name,
             method = _uiState.value.method,
             coffee = _uiState.value.coffee.toDoubleOrNull() ?: 0.0,
-            grind = _uiState.value.grind.toIntOrNull() ?: 0,
+            grind = _uiState.value.grind.toDoubleOrNull() ?: 0.0,
             water = _uiState.value.water.toDoubleOrNull() ?: 0.0,
             comment = _uiState.value.comment
         )
@@ -62,7 +72,7 @@ class NewRecipeViewModel(private val recipeRepository: RecipeRepository): ViewMo
             name = nameState.text.toString(),
             method = methodState.text.toString(),
             coffee = coffeeState.text.toString().toDoubleOrNull() ?: 0.0,
-            grind = grindState.text.toString().toIntOrNull() ?: 0,
+            grind = grindState.text.toString().toDoubleOrNull() ?: 0.0,
             water = waterState.text.toString().toDoubleOrNull() ?: 0.0,
             comment = commentState.text.toString(),
         )

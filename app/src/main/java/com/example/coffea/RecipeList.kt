@@ -199,18 +199,18 @@ fun RecipeListPreview() {
     }
 }
 
-@Composable
-@Preview
-fun RecipeCardPreview() {
-    CoffeaTheme() {
-        RecipeCard(
-            recipe = Recipe("Базовый фильтр", "V60", 24.0, 32, 400.0, "Это очень умный комментарий"),
-            onEditButtonClicked = {},
-            isExpanded = true,
-            modifier = Modifier
-        )
-    }
-}
+//@Composable
+//@Preview
+//fun RecipeCardPreview() {
+//    CoffeaTheme() {
+//        RecipeCard(
+//            recipe = Recipe("Базовый фильтр", "V60", 24.0, 32.0, 400.0, "Это очень умный комментарий"),
+//            onEditButtonClicked = {},
+//            isExpanded = true,
+//            modifier = Modifier
+//        )
+//    }
+//}
 
 //@Composable
 //@Preview(showBackground = true, showSystemUi = true)

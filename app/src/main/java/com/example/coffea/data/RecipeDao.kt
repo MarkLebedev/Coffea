@@ -11,6 +11,9 @@ interface RecipeDao {
     @Query("SELECT * FROM recipes")
     fun getAll(): Flow<List<Recipe>>
 
+    @Query("SELECT name FROM recipes")
+    fun getNames(): Flow<List<String>>
+
     @Query("SELECT * FROM recipes WHERE name = :recipe_name")
     fun getByName(recipe_name: String): Recipe
 

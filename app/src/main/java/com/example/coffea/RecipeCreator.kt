@@ -73,7 +73,7 @@ fun RecipeEditor(
         name = recipeUiState.name,
         method = recipeUiState.method,
         coffee = recipeUiState.coffee.toDoubleOrNull() ?: 0.0,
-        grind = recipeUiState.grind.toIntOrNull() ?: 0,
+        grind = recipeUiState.grind.toDoubleOrNull() ?: 0.0,
         water = recipeUiState.water.toDoubleOrNull() ?: 0.0,
         comment = recipeUiState.comment)) }
 
@@ -99,12 +99,20 @@ fun RecipeEditor(
         Text(text = "Ratio: $ratio g/L", style = MaterialTheme.typography.bodyMedium)
         Button(onClick = {
             coroutineScope.launch {
-                recipeViewModel.deleteRecipe(initialRecipe)
-                recipeViewModel.addRecipe()
-                recipeViewModel.resetRecipe()
-                onSaveClicked()
+                if (!newRecipe) {
+                    recipeViewModel.deleteRecipe(initialRecipe)
+                    recipeViewModel.addRecipe()
+                    recipeViewModel.resetRecipe()
+                    onSaveClicked()
+                } else {
+                    recipeViewModel.addRecipe()
+                    recipeViewModel.resetRecipe()
+                    onSaveClicked()
+
+                }
             }
-        }, modifier = Modifier
+        },
+            modifier = Modifier
             .padding(4.dp)
             .width(200.dp)) {
             Text(text = "Save recipe", style = MaterialTheme.typography.labelMedium)
@@ -143,7 +151,7 @@ fun InputField(label: String,
     Log.d("UISTATE", recipeViewModel.uiState.collectAsState().value.name)
 
     val fieldState = when (label) {
-        "Recipe name" -> recipeViewModel.nameState
+        "Recipe name (unique)" -> recipeViewModel.nameState
         "Brewing method" -> recipeViewModel.methodState
         "Coffee amount" -> recipeViewModel.coffeeState
         "Water amount" -> recipeViewModel.waterState
@@ -154,7 +162,7 @@ fun InputField(label: String,
 
     val keyboardOption by remember { mutableStateOf(
         when (label) {
-            "Recipe name", "Brewing method" -> KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next)
+            "Recipe name (unique)", "Brewing method" -> KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next)
             "Coffee amount", "Grind setting", "Water amount" -> KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next)
             "Comments" -> KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done)
             else -> KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next)
@@ -162,10 +170,8 @@ fun InputField(label: String,
     ) }
 
     val inputTransformation: InputTransformation? = when (label) {
-        "Coffee amount", "Water amount" -> InputTransformation.byValue { _, proposed ->
+        "Coffee amount", "Water amount", "Grind setting" -> InputTransformation.byValue { _, proposed ->
             proposed.replace("[- ,]".toRegex(), "")}
-        "Grind setting" -> InputTransformation.byValue { _, proposed ->
-            proposed.replace("[- .,]".toRegex(), "")}
         else -> null
     }
 
@@ -194,7 +200,7 @@ fun InputList(
 ) {
 
     Column(){
-        InputField(label = "Recipe name", recipeViewModel = recipeViewModel)
+        InputField(label = "Recipe name (unique)", recipeViewModel = recipeViewModel)
         InputField(label = "Brewing method", recipeViewModel = recipeViewModel)
         InputField(label = "Coffee amount", recipeViewModel = recipeViewModel)
         InputField(label = "Grind setting", recipeViewModel = recipeViewModel)

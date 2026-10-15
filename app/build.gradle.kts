@@ -20,6 +20,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
@@ -39,6 +40,8 @@ android {
     buildFeatures {
         compose = true
     }
+
+
 }
 
 dependencies {
@@ -53,6 +56,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.text.google.fonts)
     implementation(libs.androidx.material3)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -68,3 +72,24 @@ dependencies {
     implementation("androidx.room3:room3-runtime:$room_version")
     ksp("androidx.room3:room3-compiler:3.0.3")
 }
+
+ksp {
+    // Передаем абсолютный путь к папке со схемами напрямую через строку
+    arg("room.schemaLocation", "${projectDir}/schemas")
+}
+
+//class RoomSchemaArgProvider(
+//    @get:InputDirectory
+//    @get:PathSensitive(PathSensitivity.RELATIVE)
+//    val schemaDir: File
+//) : CommandLineArgumentProvider {
+//
+//    override fun asArguments(): Iterable<String> {
+//        return listOf("room.schemaLocation=${schemaDir.path}")
+//    }
+//}
+//
+//
+//ksp {
+//    arg(RoomSchemaArgProvider(File(projectDir, "schemas")))
+//}

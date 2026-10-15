@@ -1,7 +1,9 @@
 package com.example.coffea.data
 
+import androidx.room3.ColumnInfo
 import androidx.room3.Entity
 import androidx.room3.PrimaryKey
+import java.util.UUID
 
 @Entity(tableName = "recipes")
 data class Recipe(
@@ -9,7 +11,7 @@ data class Recipe(
     var name: String,
     var method: String,
     var coffee: Double,
-    var grind: Int,
+    var grind: Double,
     var water: Double,
     var comment: String
 )
